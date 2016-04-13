@@ -1,0 +1,6 @@
+language: csharp
+solution: Slant.Linq.sln
+install:
+  - nuget restore Slant.Linq.sln
+script:
+  - xbuild /p:Configuration=Debug Slant.Linq.sln
