@@ -54,7 +54,6 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="Linq.cs" />
     <Compile Include="Maybe.cs" />
-    <Compile Include="Option.cs" />
     <Compile Include="PredicateBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\..\SharedAssemblyInfo.cs">

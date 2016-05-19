@@ -8,7 +8,7 @@ Slant LINQ
 
 ## Overview
 
-Slant.Linq is a free set of extensions for LINQ power users. Used in Data oriented project and on top of the Entity Framework.
+Slant.Linq is a free set of extensions for LINQ power users. Used in Data oriented projects and on top of the Entity Framework.
 
 It comprises the following:
 
@@ -51,7 +51,7 @@ Check out [this wiki page](https://github.com/slantdotnet/Slant.Entity/wiki/Cont
 
 Jetbrains Community Support for providing great tools for our team
 
-[![Jetbrains Resharper](http://nspectator.org/assets/icon_ReSharper.png)](https://www.jetbrains.com/resharper/)
+[![Jetbrains Resharper](https://github.com/nspectator/nspectator/raw/master/tools/icon_ReSharper.png)](https://www.jetbrains.com/resharper/)
 
 
 
