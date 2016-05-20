@@ -1,37 +1,21 @@
-////////////////////////////////////////////////////////////////////////////////////////
-// The MIT License (MIT)
-// 
-// Copyright (c) 2014 Paul Louth
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-// 
-
+#region [R# naming]
+// ReSharper disable ArrangeTypeModifiers
+// ReSharper disable UnusedMember.Local
+// ReSharper disable FieldCanBeMadeReadOnly.Local
+// ReSharper disable ArrangeTypeMemberModifiers
+// ReSharper disable InconsistentNaming
+#endregion
 using System;
+using FluentAssertions;
 using Monad;
-using Xunit;
+using NUnit.Framework;
 using Monad.Utility;
 
-namespace Slant.Monad.Tests
+namespace Slant.Monad.Specs
 {
-    public class StateTests
+    public class StateSuite
     {
-        [Fact]
+        [Test]
         public void StateTest1()
         {
             var state = State.Return<string,int>();
@@ -43,12 +27,11 @@ namespace Slant.Monad.Tests
 
             var res = sm("Hello");
 
-
-            Assert.True(res.State == "Hello, World");
-            Assert.True(res.Value == 3);
+            res.State.Should().Be("Hello, World");
+            res.Value.Should().Be(3);
         }
 
-        [Fact]
+        [Test]
         public void StateTest2()
         {
             var sm = from x in State.Get<string>()
@@ -56,11 +39,10 @@ namespace Slant.Monad.Tests
                      select y;
 
             var res = sm(", World");
-
-            Assert.True(res.State == "Hello, World");
+            res.State.Should().Be("Hello, World");
         }
 
-        [Fact]
+        [Test]
         public void StateTest3()
         {
             var initial = State.Return<string,int>(10);
@@ -71,11 +53,10 @@ namespace Slant.Monad.Tests
                      select y;
 
             var res = sm(", World");
-
-            Assert.True(res.State == "Hello 100, World");
+            res.State.Should().Be("Hello 100, World");
         }
 
-        [Fact]
+        [Test]
         public void StateTest4()
         {
             var first = State.Return<string,int>(10);
@@ -88,11 +69,10 @@ namespace Slant.Monad.Tests
                      select s;
 
             var res = sm(", World");
-
-            Assert.True(res.State == "Hello 30, World");
+            res.State.Should().Be("Hello 30, World");
         }
 
-        [Fact]
+        [Test]
         public void StateTest5()
         {
             var first = State.Return<string,int>(10);
@@ -111,12 +91,11 @@ namespace Slant.Monad.Tests
                      select x * y * z * w;
 
             var res = sm(", World");
-
-            Assert.True(res.State == "Hello 30, World 500");
-            Assert.True(res.Value == 15000);
+            res.State.Should().Be("Hello 30, World 500");
+            res.Value.Should().Be(15000);
         }
 
-        [Fact]
+        [Test]
         public void StateTest6()
         {            
             var first  = State.Return<string,int>(10);
@@ -136,21 +115,21 @@ namespace Slant.Monad.Tests
 
             var res = sm(", World"); // Invoke with the initial state
 
-            Assert.True(res.State == "Hello 30, Worldyyy 500");
-            Assert.True(res.Value == 15000);
+            res.State.Should().Be("Hello 30, Worldyyy 500");
+            res.Value.Should().Be(15000);
         }
 
         static State<Unit, S> Put<S>( S state )
         {
-            return _ => StateResult.Create<Unit, S>(Unit.Default, state);
+            return _ => StateResult.Create(Unit.Default, state);
         } 
 
-        State<string,int> DoSomethingElse()
+        static State<string,int> DoSomethingElse()
         {
             return state => StateResult.Create(state + "rld",1);
         }
 
-        State<string,int> DoSomething()
+        static State<string,int> DoSomething()
         {
             return state => StateResult.Create(state + ", Wo",2);
         }

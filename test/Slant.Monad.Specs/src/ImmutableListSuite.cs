@@ -1,5 +1,12 @@
-﻿using Monad.Parsec;
-using Xunit;
+﻿#region [R# naming]
+// ReSharper disable ArrangeTypeModifiers
+// ReSharper disable UnusedMember.Local
+// ReSharper disable FieldCanBeMadeReadOnly.Local
+// ReSharper disable ArrangeTypeMemberModifiers
+// ReSharper disable InconsistentNaming
+#endregion
+using Monad.Parsec;
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,11 +17,11 @@ using Monad;
 using Monad.Utility;
 
 
-namespace Slant.Monad.Tests
+namespace Slant.Monad.Specs
 {
-    public class ImmutableListTests
+    public class ImmutableListSuite
     {
-        [Fact]
+        [Test]
         public void EnumeratorTest1()
         {
             var list1 = new ImmutableList<int>(new int[] { 0, 1, 2 });
@@ -28,7 +35,7 @@ namespace Slant.Monad.Tests
             index.Should().Be(3);
         }
 
-        [Fact]
+        [Test]
         public void EnumeratorTest2()
         {
             var list1 = new ImmutableList<int>(new int[] { 0, 1, 2 });
@@ -46,7 +53,7 @@ namespace Slant.Monad.Tests
             index.Should().Be(6);
         }
 
-        [Fact]
+        [Test]
         public void EnumeratorTest3()
         {
             var list1 = new ImmutableList<int>(new int[] { 1, 2, 3 });
@@ -64,7 +71,7 @@ namespace Slant.Monad.Tests
             index.Should().Be(7);
         }
 
-        [Fact]
+        [Test]
         public void EnumeratorLengthTest1()
         {
             var list1 = new ImmutableList<int>(new int[] { 0, 1, 2 });

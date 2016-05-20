@@ -1,46 +1,30 @@
-////////////////////////////////////////////////////////////////////////////////////////
-// The MIT License (MIT)
-// 
-// Copyright (c) 2014 Martin Thomalla
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-// 
-
+#region [R# naming]
+// ReSharper disable ArrangeTypeModifiers
+// ReSharper disable UnusedMember.Local
+// ReSharper disable FieldCanBeMadeReadOnly.Local
+// ReSharper disable ArrangeTypeMemberModifiers
+// ReSharper disable InconsistentNaming
+#endregion
 using System;
+using FluentAssertions;
 using Monad;
-using Xunit;
+using NUnit.Framework;
 
-namespace Slant.Monad.Tests
+namespace Slant.Monad.Specs
 {
-    public class TryTests
+    public class TrySuite
     {
-        [Fact]
+        [Test]
         public void TestTry()
         {
             var r = from lhs in Error()
                     from rhs in Two()
                     select lhs+rhs;
 
-            Assert.True(r().IsFaulted && r().Exception.Message == "Error!!");
+            (r().IsFaulted && r().Exception.Message == "Error!!").Should().BeTrue();
         }
 
-        [Fact]
+        [Test]
         public void TestEitherBinding2()
         {
             var r = (from lhs in Two()
@@ -48,31 +32,31 @@ namespace Slant.Monad.Tests
                      select lhs + rhs)
                     .TryMemo();
 
-            Assert.True(r().IsFaulted && r().Exception.Message == "Error!!");
+            (r().IsFaulted && r().Exception.Message == "Error!!").Should().BeTrue();
         }
 
 
-        [Fact]
+        [Test]
         public void TestEitherBinding3()
         {
             var r = 
                 from lhs in Two()
                 select lhs;
 
-            Assert.True(r().Value == 2);
+            (r().Value == 2).Should().BeTrue();
         }    
 
-        [Fact]
+        [Test]
         public void TestEitherBinding4()
         {
             var r = 
                 from lhs in Error()
                 select lhs;
 
-            Assert.True(r().IsFaulted && r().Exception.Message == "Error!!");
+            (r().IsFaulted && r().Exception.Message == "Error!!").Should().BeTrue();
         }
 
-        [Fact]
+        [Test]
         public void TestEitherBinding5()
         {
             var r =
@@ -81,10 +65,10 @@ namespace Slant.Monad.Tests
                 from thr in Two()
                 select one + two + thr;
 
-            Assert.True(r().IsFaulted && r().Exception.Message == "Error!!");
+            (r().IsFaulted && r().Exception.Message == "Error!!").Should().BeTrue();
         }
 
-        [Fact]
+        [Test]
         public void TestEitherMatch1()
         {
             var unit =
@@ -93,14 +77,14 @@ namespace Slant.Monad.Tests
                  from thr in Two()
                  select one + two + thr)
                 .Match(
-                    Success: r => Assert.True(false),
-                    Fail: l => Assert.True(l.Message == "Error!!")
+                    Success: r => false.Should().BeTrue(),
+                    Fail: l => l.Message.Should().Be("Error!!")
                 );
 
             Console.WriteLine(unit.ToString());
         }
 
-        [Fact]
+        [Test]
         public void TestEitherMatch2()
         {
             var unit =
@@ -109,13 +93,13 @@ namespace Slant.Monad.Tests
                  from thr in Two()
                  select one + two + thr)
                 .Match(
-                    succ => Assert.False(true),
-                    fail => Assert.True(fail.Message == "Error!!")
+                    succ => true.Should().BeFalse(),
+                    fail => fail.Message.Should().Be("Error!!")
                 );
             Console.WriteLine(unit.ToString());
         }
 
-        [Fact]
+        [Test]
         public void TestEitherMatch3()
         {
             var unit =
@@ -123,13 +107,13 @@ namespace Slant.Monad.Tests
                  from two in Two()
                  select one + two)
                 .Match(
-                    Success: r => Assert.True(r == 4),
-                    Fail: l => Assert.False(true)
+                    Success: r => r.Should().Be(4),
+                    Fail: l => true.Should().BeFalse()
                 );
             Console.WriteLine(unit.ToString());
         }
 
-        [Fact]
+        [Test]
         public void TestEitherMatch4()
         {
             var unit =
@@ -137,13 +121,13 @@ namespace Slant.Monad.Tests
                  from two in Two()
                  select one + two)
                 .Match(
-                    succ => Assert.True(succ == 4),
-                    fail => Assert.False(true)
+                    succ => succ.Should().Be(4),
+                    fail => true.Should().BeFalse()
                 );
             Console.WriteLine(unit.ToString());
         }
 
-        [Fact]
+        [Test]
         public void TestEitherMatch5()
         {
             var result =
@@ -155,10 +139,10 @@ namespace Slant.Monad.Tests
                     Fail: l => 0
                 );
 
-            Assert.True(result() == 8);
+            result().Should().Be(8);
         }
 
-        [Fact]
+        [Test]
         public void TestEitherMatch6()
         {
             var result =
@@ -171,18 +155,11 @@ namespace Slant.Monad.Tests
                     Fail: l => 0
                 );
 
-            Assert.True(result() == 0);
+            result().Should().Be(0);
         }
 
-        public Try<int> Two()
-        {
-            return () => 2;
-        }
-
-        public Try<int> Error()
-        {
-            return () => { throw new Exception("Error!!"); };
-        }
-
+        public Try<int> Two() => () => 2;
+        
+        public Try<int> Error() => () => { throw new Exception("Error!!"); };
     }
 }

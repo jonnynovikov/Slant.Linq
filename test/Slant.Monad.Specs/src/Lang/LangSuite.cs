@@ -1,28 +1,11 @@
-﻿////////////////////////////////////////////////////////////////////////////////////////
-// The MIT License (MIT)
-// 
-// Copyright (c) 2014 Paul Louth
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-// 
-
-using Xunit;
+﻿#region [R# naming]
+// ReSharper disable ArrangeTypeModifiers
+// ReSharper disable UnusedMember.Local
+// ReSharper disable FieldCanBeMadeReadOnly.Local
+// ReSharper disable ArrangeTypeMemberModifiers
+// ReSharper disable InconsistentNaming
+#endregion
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,10 +15,11 @@ using FluentAssertions;
 using Monad;
 using Monad.Parsec;
 using Monad.Utility;
+using static System.String;
 
-namespace Slant.Monad.Tests.Lang
+namespace Slant.Monad.Specs.Lang
 {
-    public class LangTests
+    public class LangSuite
     {
         Parser<ImmutableList<ParserChar>> Id;
         Parser<ImmutableList<ParserChar>> Ident;
@@ -50,7 +34,7 @@ namespace Slant.Monad.Tests.Lang
         Parser<Term> Term1;
         Parser<Term> Parser;
 
-        [Fact]
+        [Test]
         public void BuildLangParser()
         {
             var opChars = ";.,<>?/\\|\"':=+-_*&^%$£@!".AsEnumerable();
@@ -138,7 +122,7 @@ namespace Slant.Monad.Tests.Lang
         }
 
 
-        [Fact]
+        [Test]
         public void RunLangParser()
         {
             BuildLangParser();
@@ -154,7 +138,7 @@ namespace Slant.Monad.Tests.Lang
 
             if (result.IsFaulted)
             {
-                string errs = System.String.Join("\n",
+                string errs = Join("\n",
                     result.Errors.Select(e=>
                         e.Message + "Expected " + e.Expected + " at " + e.Location + 
                         " - " + e.Input.AsString().Substring(0, Math.Min(30, e.Input.AsString().Length))
@@ -174,6 +158,7 @@ namespace Slant.Monad.Tests.Lang
     }
 
     public abstract class Term { }
+
     public class LambdaTerm : Term
     {
         public readonly ImmutableList<ParserChar> Ident; 

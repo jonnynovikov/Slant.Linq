@@ -1,28 +1,11 @@
-﻿////////////////////////////////////////////////////////////////////////////////////////
-// The MIT License (MIT)
-// 
-// Copyright (c) 2014 Paul Louth
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-// 
-
-﻿using Xunit;
+﻿#region [R# naming]
+// ReSharper disable ArrangeTypeModifiers
+// ReSharper disable UnusedMember.Local
+// ReSharper disable FieldCanBeMadeReadOnly.Local
+// ReSharper disable ArrangeTypeMemberModifiers
+// ReSharper disable InconsistentNaming
+#endregion
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,13 +16,13 @@ using System.Threading.Tasks;
 ﻿using Monad.Parsec;
 using Monad.Utility;
 
-namespace Slant.Monad.Tests.ML
+namespace Slant.Monad.Specs.ML
 {
     //
     // Inspired by http://blogs.msdn.com/b/lukeh/archive/2007/08/19/monadic-parser-combinators-using-c-3-0.aspx
     //
 	
-    public class MLTests
+    public class MLSuite
     {
         Parser<ImmutableList<ParserChar>> Id;
         Parser<ImmutableList<ParserChar>> Ident;
@@ -49,7 +32,7 @@ namespace Slant.Monad.Tests.ML
         Parser<Term> Term1;
         Parser<Term> Parser;
 
-        [Fact]
+        [Test]
         public void BuildMLParser()
         {
             var ws = Prim.WhiteSpace();// | New.Return(new ParserChar(' '));
@@ -99,7 +82,7 @@ namespace Slant.Monad.Tests.ML
                      select t;
         }
 
-        [Fact]
+        [Test]
         public void TestIdParser()
         {
             BuildMLParser();
@@ -113,11 +96,11 @@ namespace Slant.Monad.Tests.ML
             r.Value.First().Item1.AsString().Should().Be("Testing123");
 
             r = Id.Parse("   1Testing123   ");
-            (!r.IsFaulted).Should().BeTrue();
+            r.IsFaulted.Should().BeTrue();
             r.Errors.First().Location.Column.Should().Be(4);
         }
 
-        [Fact]
+        [Test]
         public void TestTerm1Parser()
         {
             BuildMLParser();
@@ -128,49 +111,50 @@ namespace Slant.Monad.Tests.ML
             r.Value.First().Item2.IsEmpty.Should().BeTrue();
         }
 
-        [Fact]
+        [Test]
         public void TestApplTermParser()
         {
             BuildMLParser();
 
             var r = Term.Parse("add x y z w");
             (!r.IsFaulted).Should().BeTrue();
-            Assert.True(r.Value.First().Item2.IsEmpty);
+            r.Value.First().Item2.IsEmpty.Should().BeTrue();
         }
 
-        [Fact]
+        [Test]
         public void TestLetTermParser()
         {
             BuildMLParser();
 
             var r = Term.Parse("let add = x in y");
             (!r.IsFaulted).Should().BeTrue();
-            Assert.True(r.Value.First().Item2.IsEmpty);
+            r.Value.First().Item2.IsEmpty.Should().BeTrue();
         }
 
-        [Fact]
+        [Test]
         public void TestLetIdParser()
         {
             BuildMLParser();
 
             var r = LetId.Parse("let");
+
             (!r.IsFaulted).Should().BeTrue();
-            Assert.True(r.Value.First().Item1.AsString() == "let");
-            Assert.True(r.Value.First().Item2.IsEmpty);
+            r.Value.First().Item1.AsString().Should().Be("let");
+            r.Value.First().Item2.IsEmpty.Should().BeTrue();
         }
 
-        [Fact]
+        [Test]
         public void TestInIdParser()
         {
             BuildMLParser();
 
             var r = InId.Parse("in");
             (!r.IsFaulted).Should().BeTrue();
-            Assert.True(r.Value.First().Item1.AsString() == "in");
-            Assert.True(r.Value.First().Item2.IsEmpty);
+            r.Value.First().Item1.AsString().Should().Be("in");
+            r.Value.First().Item2.IsEmpty.Should().BeTrue();
         }
 
-        [Fact]
+        [Test]
         public void RunMLParser()
         {
             BuildMLParser();
@@ -183,7 +167,7 @@ namespace Slant.Monad.Tests.ML
             var result = Parser.Parse(input);
 
             (!result.IsFaulted).Should().BeTrue();
-            Assert.True(result.Value.First().Item2.IsEmpty);
+            result.Value.First().Item2.IsEmpty.Should().BeTrue();
 
             Term ast = result.Value.Single().Item1;
 

@@ -1,53 +1,34 @@
-﻿////////////////////////////////////////////////////////////////////////////////////////
-// The MIT License (MIT)
-// 
-// Copyright (c) 2014 Paul Louth
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-// 
-
-﻿using System;
+﻿#region [R# naming]
+// ReSharper disable ArrangeTypeModifiers
+// ReSharper disable UnusedMember.Local
+// ReSharper disable FieldCanBeMadeReadOnly.Local
+// ReSharper disable ArrangeTypeMemberModifiers
+// ReSharper disable InconsistentNaming
+#endregion
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 ﻿using FluentAssertions;
 ﻿using Monad;
-﻿using Xunit;
+﻿using NUnit.Framework;
 
-
-namespace Slant.Monad.Tests
+namespace Slant.Monad.Specs
 {
-    public class ErrorTests
+    public class ErrorSuite
     {
-
-        private Try<int> DoSomething(int value)
+        private static Try<int> DoSomething(int value)
         {
             return () => value + 1;
         }
 
-        private Try<int> DoSomethingElse(int value)
+        private static Try<int> DoSomethingElse(int value)
         {
             return () => value + 10;
         }
 
-        private Try<int> DoSomethingError(int value)
+        private static Try<int> DoSomethingError(int value)
         {
             return () =>
             {
@@ -55,17 +36,17 @@ namespace Slant.Monad.Tests
             };
         }
 
-        private int ThrowError(int val)
+        private static int ThrowError(int val)
         {
             throw new Exception("Whoops");
         }
 
-        private Try<int> DoNotEverEnterThisFunction(int value)
+        private static Try<int> DoNotEverEnterThisFunction(int value)
         {
             return () => 10000;
         }
 
-        [Fact]
+        [Test]
         public void TestWithoutRunTry()
         {
             var t = from v in DoSomethingError(10)
@@ -83,7 +64,7 @@ namespace Slant.Monad.Tests
         }
 
 
-        [Fact]
+        [Test]
         public void TestErrorMonadLaws()
         {
             var value = 1000;
@@ -111,7 +92,7 @@ namespace Slant.Monad.Tests
 
         }
 
-        [Fact]
+        [Test]
         public void TestErrorMonadSuccess()
         {
             var result = (from val1 in DoSomething(10)
@@ -123,7 +104,7 @@ namespace Slant.Monad.Tests
             result.Value.Should().Be(21, "Value should be 21");
         }
 
-        [Fact]
+        [Test]
         public void TestErrorMonadFail()
         {
             var result = (from val1 in DoSomething(10)
@@ -136,7 +117,7 @@ namespace Slant.Monad.Tests
             result.IsFaulted.Should().BeTrue("Should throw an error");
         }
 
-        [Fact]
+        [Test]
         public void TestErrorMonadSuccessFluent()
         {
             var result = DoSomething(10).Then(val2 => val2 + 10).Try();
@@ -145,7 +126,7 @@ namespace Slant.Monad.Tests
             result.Value.Should().Be(21, "Value should be 21");
         }
 
-        [Fact]
+        [Test]
         public void TestErrorMonadFailFluent()
         {
             var result = DoSomething(10)
@@ -172,7 +153,7 @@ namespace Slant.Monad.Tests
             return () => { throw new Exception("Error!!"); };
         }
 
-        [Fact]
+        [Test]
         public void TestErrorMatch1()
         {
            (from one in One()
@@ -185,7 +166,7 @@ namespace Slant.Monad.Tests
             );
         }
 
-        [Fact]
+        [Test]
         public void TestErrorMatch2()
         {
             var unit =
@@ -201,7 +182,7 @@ namespace Slant.Monad.Tests
             Console.WriteLine(unit.ToString());
         }
 
-        [Fact]
+        [Test]
         public void TestErrorMatch3()
         {
             (from one in One()
@@ -213,7 +194,7 @@ namespace Slant.Monad.Tests
             );
         }
 
-        [Fact]
+        [Test]
         public void TestErrorMatch4()
         {
             var unit =

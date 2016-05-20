@@ -1,4 +1,11 @@
-﻿using Xunit;
+﻿#region [R# naming]
+// ReSharper disable ArrangeTypeModifiers
+// ReSharper disable UnusedMember.Local
+// ReSharper disable FieldCanBeMadeReadOnly.Local
+// ReSharper disable ArrangeTypeMemberModifiers
+// ReSharper disable InconsistentNaming
+#endregion
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,13 +13,13 @@ using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
 
-namespace Slant.Monad.Tests
+namespace Slant.Monad.Specs
 {
-    public class MemoizationTests
+    public class MemoizationSuite
     {
         int breakIt = 0;
 
-        [Fact]
+        [Test]
         public void MemoizationTest1()
         {
             var mon = (from one in One()

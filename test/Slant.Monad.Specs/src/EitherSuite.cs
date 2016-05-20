@@ -1,37 +1,20 @@
-////////////////////////////////////////////////////////////////////////////////////////
-// The MIT License (MIT)
-// 
-// Copyright (c) 2014 Paul Louth
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-// 
-
+#region [R# naming]
+// ReSharper disable ArrangeTypeModifiers
+// ReSharper disable UnusedMember.Local
+// ReSharper disable FieldCanBeMadeReadOnly.Local
+// ReSharper disable ArrangeTypeMemberModifiers
+// ReSharper disable InconsistentNaming
+#endregion
 using System;
 using FluentAssertions;
 using Monad;
-using Xunit;
+using NUnit.Framework;
 
-namespace Slant.Monad.Tests
+namespace Slant.Monad.Specs
 {
-    public class EitherTests
+    public class EitherSuite
     {
-        [Fact]
+        [Test]
         public void TestEitherBinding1()
         {
             var r = from lhs in Two()
@@ -41,7 +24,7 @@ namespace Slant.Monad.Tests
             (r.IsRight() && r.Right() == 4).Should().BeTrue();
         }
 
-        [Fact]
+        [Test]
         public void TestEitherBinding2()
         {
             var r = (from lhs in Two()
@@ -53,7 +36,7 @@ namespace Slant.Monad.Tests
         }
 
 
-        [Fact]
+        [Test]
         public void TestEitherBinding3()
         {
             var r = 
@@ -63,7 +46,7 @@ namespace Slant.Monad.Tests
             (r.IsRight() && r.Right() == 2).Should().BeTrue();
         }    
 
-        [Fact]
+        [Test]
         public void TestEitherBinding4()
         {
             var r = 
@@ -73,7 +56,7 @@ namespace Slant.Monad.Tests
             (r.IsLeft() && r.Left() == "Error!!").Should().BeTrue();
         }
 
-        [Fact]
+        [Test]
         public void TestEitherBinding5()
         {
             var r =
@@ -85,7 +68,7 @@ namespace Slant.Monad.Tests
             (r.IsLeft() && r.Left() == "Error!!").Should().BeTrue();
         }
 
-        [Fact]
+        [Test]
         public void TestEitherMatch1()
         {
             var unit =
@@ -101,7 +84,7 @@ namespace Slant.Monad.Tests
             Console.WriteLine(unit.ToString());
         }
 
-        [Fact]
+        [Test]
         public void TestEitherMatch2()
         {
             var unit =
@@ -116,7 +99,7 @@ namespace Slant.Monad.Tests
             Console.WriteLine(unit.ToString());
         }
 
-        [Fact]
+        [Test]
         public void TestEitherMatch3()
         {
             var unit =
@@ -130,7 +113,7 @@ namespace Slant.Monad.Tests
             Console.WriteLine(unit.ToString());
         }
 
-        [Fact]
+        [Test]
         public void TestEitherMatch4()
         {
             var unit =
@@ -144,7 +127,7 @@ namespace Slant.Monad.Tests
             Console.WriteLine(unit.ToString());
         }
 
-        [Fact]
+        [Test]
         public void TestEitherMatch5()
         {
             var result =
@@ -159,7 +142,7 @@ namespace Slant.Monad.Tests
             result().Should().Be(8);
         }
 
-        [Fact]
+        [Test]
         public void TestEitherMatch6()
         {
             var result =

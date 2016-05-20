@@ -1,38 +1,21 @@
-////////////////////////////////////////////////////////////////////////////////////////
-// The MIT License (MIT)
-// 
-// Copyright (c) 2014 Paul Louth
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-//
-
+#region [R# naming]
+// ReSharper disable ArrangeTypeModifiers
+// ReSharper disable UnusedMember.Local
+// ReSharper disable FieldCanBeMadeReadOnly.Local
+// ReSharper disable ArrangeTypeMemberModifiers
+// ReSharper disable InconsistentNaming
+#endregion
 using FluentAssertions;
 using Monad;
 using Monad.Parsec;
 using Monad.Parsec.Language;
-using Xunit;
+using NUnit.Framework;
 
-namespace Slant.Monad.Tests.Lex
+namespace Slant.Monad.Specs.Lex
 {
     public class TokTests
     {
-        [Fact]
+        [Test]
         public void LexemeTest()
         {
             var lex = from l in Tok.Lexeme<ParserChar>(Prim.Character('A'))
@@ -45,7 +28,7 @@ namespace Slant.Monad.Tests.Lex
             res.IsFaulted.Should().BeFalse();
         }
 
-        [Fact]
+        [Test]
         public void SymbolTest()
         {
             var sym = from s in Tok.Symbol("***")
@@ -56,7 +39,7 @@ namespace Slant.Monad.Tests.Lex
             res.IsFaulted.Should().BeFalse();
         }
 
-        [Fact]
+        [Test]
         public void OneLineComment()
         {
             var p = from v in Tok.OneLineComment(new HaskellDef())
@@ -68,7 +51,7 @@ namespace Slant.Monad.Tests.Lex
         }
 
 
-        [Fact]
+        [Test]
         public void MultiLineComment()
         {
             var p = from v in Tok.MultiLineComment(new HaskellDef())
@@ -84,7 +67,7 @@ namespace Slant.Monad.Tests.Lex
             (!res.IsFaulted &&  left == "  let x=1").Should().BeTrue();
         }
 
-        [Fact]
+        [Test]
         public void WhiteSpaceTest()
         {
             var p = from v in Tok.WhiteSpace(new HaskellDef())
@@ -100,7 +83,7 @@ namespace Slant.Monad.Tests.Lex
             (!res.IsFaulted && left == "let x=1").Should().BeTrue();
         }
 
-        [Fact]
+        [Test]
         public void CharLiteralTest()
         {
             var p = from v in Tok.Chars.CharLiteral()
@@ -116,7 +99,7 @@ namespace Slant.Monad.Tests.Lex
             (res.Value.Head().Item1.Value.Value == '\n').Should().BeTrue();
         }
 
-        [Fact]
+        [Test]
         public void StringLiteralTest()
         {
             var p = from v in Tok.Strings.StringLiteral()
@@ -133,7 +116,7 @@ namespace Slant.Monad.Tests.Lex
         }
 
 
-        [Fact]
+        [Test]
         public void NumbersIntegerTest()
         {
             var p = from v in Tok.Numbers.Integer()
@@ -146,7 +129,7 @@ namespace Slant.Monad.Tests.Lex
             (res.Value.Head().Item1.Value == 1234).Should().BeTrue();
         }
 
-        [Fact]
+        [Test]
         public void NumbersHexTest()
         {
             var p = from v in Tok.Numbers.Hexadecimal()
@@ -159,7 +142,7 @@ namespace Slant.Monad.Tests.Lex
             (res.Value.Head().Item1.Value == 0xAB34).Should().BeTrue();
         }
 
-        [Fact]
+        [Test]
         public void NumbersOctalTest()
         {
             var p = from v in Tok.Numbers.Octal()
@@ -172,7 +155,7 @@ namespace Slant.Monad.Tests.Lex
             (res.Value.Head().Item1.Value == 511).Should().BeTrue();
         }
 
-        [Fact]
+        [Test]
         public void TestParens()
         {
             var r = Tok.Bracketing.Parens(Tok.Chars.CharLiteral()).Parse("( 'a' )");
@@ -180,7 +163,7 @@ namespace Slant.Monad.Tests.Lex
             (r.Value.Head().Item1.Value.Value == 'a').Should().BeTrue();
         }
 
-        [Fact]
+        [Test]
         public void TestBraces()
         {
             var r = Tok.Bracketing.Braces(Tok.Chars.CharLiteral()).Parse("{ 'a' }");
@@ -188,7 +171,7 @@ namespace Slant.Monad.Tests.Lex
             (r.Value.Head().Item1.Value.Value == 'a').Should().BeTrue();
         }
 
-        [Fact]
+        [Test]
         public void TestBrackets()
         {
             var r = Tok.Bracketing.Brackets(Tok.Chars.CharLiteral()).Parse("[ 'a' ]");
@@ -196,7 +179,7 @@ namespace Slant.Monad.Tests.Lex
             (r.Value.Head().Item1.Value.Value == 'a').Should().BeTrue();
         }
 
-        [Fact]
+        [Test]
         public void TestAngles()
         {
             var r = Tok.Bracketing.Angles(Tok.Chars.CharLiteral()).Parse("< 'a' >");
@@ -204,7 +187,7 @@ namespace Slant.Monad.Tests.Lex
             (r.Value.Head().Item1.Value.Value == 'a').Should().BeTrue();
         }
 
-        [Fact]
+        [Test]
         public void TestIdentifier()
         {
             var r = Tok.Id.Identifier(new HaskellDef()).Parse("onetWothree123  ");
@@ -212,7 +195,7 @@ namespace Slant.Monad.Tests.Lex
             (r.Value.Head().Item1.Value.AsString() == "onetWothree123").Should().BeTrue();
         }
 
-        [Fact]
+        [Test]
         public void TestReserved()
         {
             var def = new HaskellDef();
@@ -221,7 +204,7 @@ namespace Slant.Monad.Tests.Lex
             (r.Value.Head().Item1.Value.AsString() == def.ReservedNames.Head()).Should().BeTrue();
         }
 
-        [Fact]
+        [Test]
         public void TestOperator()
         {
             var def = new HaskellDef();
@@ -230,7 +213,7 @@ namespace Slant.Monad.Tests.Lex
             (r.Value.Head().Item1.Value.AsString() == "&&*").Should().BeTrue();
         }
 
-        [Fact]
+        [Test]
         public void TestReservedOperator()
         {
             var def = new HaskellDef();
