@@ -1,10 +1,13 @@
 ﻿#region [R# naming]
+
 // ReSharper disable ArrangeTypeModifiers
 // ReSharper disable UnusedMember.Local
 // ReSharper disable FieldCanBeMadeReadOnly.Local
 // ReSharper disable ArrangeTypeMemberModifiers
 // ReSharper disable InconsistentNaming
+
 #endregion
+
 using NUnit.Framework;
 using Monad.Parsec;
 using System;
@@ -15,45 +18,45 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Monad;
 
-namespace Slant.Monad.Specs
+namespace Monad.Specs
 {
     public class ParsecSuite
     {
-		[Test]
-		public void TestOR()
-		{
-			var p = 
-				(from fst in Prim.String("robert")
-				 select fst)
-					.Or(from snd in Prim.String("jimmy")
-				        select snd)
-					.Or(from thrd in Prim.String("john paul")
-				        select thrd)
-					.Or(from fth in Prim.String("john")
-				        select fth);
+        [Test]
+        public void TestOR()
+        {
+            var p =
+                (from fst in Prim.String("robert")
+                    select fst)
+                    .Or(from snd in Prim.String("jimmy")
+                        select snd)
+                    .Or(from thrd in Prim.String("john paul")
+                        select thrd)
+                    .Or(from fth in Prim.String("john")
+                        select fth);
 
-			var r = p.Parse("robert");
-			(!r.IsFaulted && r.Value.Single().Item1.IsEqualTo("robert")).Should().BeTrue();
+            var r = p.Parse("robert");
+            (!r.IsFaulted && r.Value.Single().Item1.IsEqualTo("robert")).Should().BeTrue();
             r = p.Parse("jimmy");
-			(!r.IsFaulted && r.Value.Single().Item1.IsEqualTo("jimmy")).Should().BeTrue();
+            (!r.IsFaulted && r.Value.Single().Item1.IsEqualTo("jimmy")).Should().BeTrue();
             r = p.Parse("john paul");
-			(!r.IsFaulted && r.Value.Single().Item1.IsEqualTo("john paul")).Should().BeTrue();
+            (!r.IsFaulted && r.Value.Single().Item1.IsEqualTo("john paul")).Should().BeTrue();
             r = p.Parse("john");
-			(!r.IsFaulted && r.Value.Single().Item1.IsEqualTo("john")).Should().BeTrue();
+            (!r.IsFaulted && r.Value.Single().Item1.IsEqualTo("john")).Should().BeTrue();
         }
 
         [Test]
         public void TestBinding()
         {
             var p = from x in Prim.Item()
-                    from _ in Prim.Item()
-                    from y in Prim.Item()
-                    select new[] { x, y };
+                from _ in Prim.Item()
+                from y in Prim.Item()
+                select new[] {x, y};
 
             var res = p.Parse("abcdef").Value.Single();
 
             (res.Item1.First().Value == 'a' &&
-                          res.Item1.Second().Value == 'c').Should().BeTrue();
+             res.Item1.Second().Value == 'c').Should().BeTrue();
 
             res.Item1.First().Location.Line.Should().Be(1);
             res.Item1.First().Location.Column.Should().Be(1);
@@ -73,7 +76,8 @@ namespace Slant.Monad.Specs
 
             (!p.Parse("123").IsFaulted && p.Parse("123").Value.Single().Item1 == 123).Should().BeTrue();
             (!p.Parse("-123").IsFaulted && p.Parse("-123").Value.Single().Item1 == -123).Should().BeTrue();
-            (!p.Parse(int.MaxValue.ToString()).IsFaulted && p.Parse(int.MaxValue.ToString()).Value.Single().Item1 == int.MaxValue).Should().BeTrue();
+            (!p.Parse(int.MaxValue.ToString()).IsFaulted &&
+             p.Parse(int.MaxValue.ToString()).Value.Single().Item1 == int.MaxValue).Should().BeTrue();
 
             // Bug here in both .NET and Mono, neither can parse an Int32.MinValue, overflow exception is thrown.
             //Assert.True(!p.Parse(int.MinValue.ToString()).IsFaulted && p.Parse(int.MinValue.ToString()).Value.Single().Item1 == int.MinValue);
@@ -83,15 +87,15 @@ namespace Slant.Monad.Specs
         public void TestDigitList()
         {
             var p = from open in Prim.Character('[')
-                    from d in Prim.Digit()
-                    from ds in
-                        Prim.Many(
-                            from comma in Prim.Character(',')
-                            from digit in Prim.Digit()
-                            select digit
-                            )
-                    from close in Prim.Character(']')
-                    select d.Cons(ds);
+                from d in Prim.Digit()
+                from ds in
+                    Prim.Many(
+                        from comma in Prim.Character(',')
+                        from digit in Prim.Digit()
+                        select digit
+                        )
+                from close in Prim.Character(']')
+                select d.Cons(ds);
 
             var r = p.Parse("[1,2,3,4]").Value.Single();
 
@@ -211,7 +215,8 @@ namespace Slant.Monad.Specs
             r = p.Parse("xxx");
             (r.IsFaulted).Should().BeTrue();
             r = p.Parse("www");
-            (!r.IsFaulted && r.Value.Head().Item1.Value == 'w' && r.Value.Head().Item2.AsString() == "ww").Should().BeTrue();
+            (!r.IsFaulted && r.Value.Head().Item1.Value == 'w' && r.Value.Head().Item2.AsString() == "ww").Should()
+                .BeTrue();
         }
 
         [Test]
@@ -240,7 +245,7 @@ namespace Slant.Monad.Specs
         public void TestItem()
         {
             Prim.Item().Parse("").Value.IsEmpty.Should().BeTrue();
-            
+
             var r = Prim.Item().Parse("abc").Value.Single();
             (r.Item1.Value == 'a' &&
              r.Item2.AsString() == "bc").Should().BeTrue();
@@ -276,8 +281,8 @@ namespace Slant.Monad.Specs
             var inp = "abc".ToParserChar();
 
             var parser = Prim.Choice(
-                    Prim.Failure<ParserChar>( ParserError.Create("failed because...",inp) ), 
-                    Prim.Return(Prim.ParserChar('d'))
+                Prim.Failure<ParserChar>(ParserError.Create("failed because...", inp)),
+                Prim.Return(Prim.ParserChar('d'))
                 )
                 .Parse(inp);
 
@@ -316,5 +321,4 @@ namespace Slant.Monad.Specs
             (r.Value.First().Item1.AsString() == "abc").Should().BeTrue();
         }
     }
-
 }

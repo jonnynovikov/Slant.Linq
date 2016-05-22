@@ -1,20 +1,23 @@
 ﻿#region [R# naming]
+
 // ReSharper disable ArrangeTypeModifiers
 // ReSharper disable UnusedMember.Local
 // ReSharper disable FieldCanBeMadeReadOnly.Local
 // ReSharper disable ArrangeTypeMemberModifiers
 // ReSharper disable InconsistentNaming
+
 #endregion
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-﻿using FluentAssertions;
-﻿using Monad;
-﻿using NUnit.Framework;
+using FluentAssertions;
+using Monad;
+using NUnit.Framework;
 
-namespace Slant.Monad.Specs
+namespace Monad.Specs
 {
     public class ErrorSuite
     {
@@ -30,10 +33,7 @@ namespace Slant.Monad.Specs
 
         private static Try<int> DoSomethingError(int value)
         {
-            return () =>
-            {
-                throw new Exception("Whoops");
-            };
+            return () => { throw new Exception("Whoops"); };
         }
 
         private static int ThrowError(int val)
@@ -50,7 +50,7 @@ namespace Slant.Monad.Specs
         public void TestWithoutRunTry()
         {
             var t = from v in DoSomethingError(10)
-                    select v;
+                select v;
 
             var e = t();
 
@@ -74,7 +74,7 @@ namespace Slant.Monad.Specs
 
             errorM.Try().Value.Should().Be(1000);
             errorM.Try().IsFaulted.Should().BeFalse();
-            
+
             errorM = DoSomethingError(0);
 
             errorM.Try().IsFaulted.Should().BeTrue();
@@ -82,23 +82,22 @@ namespace Slant.Monad.Specs
 
             // Bind
             var boundM = (from e in errorM
-                          from b in DoSomethingError(0)
-                          select b)
-                         .Try();
+                from b in DoSomethingError(0)
+                select b)
+                .Try();
 
             // Value
-                boundM.IsFaulted.Should().BeTrue();
+            boundM.IsFaulted.Should().BeTrue();
             boundM.Exception.Should().NotBeNull();
-
         }
 
         [Test]
         public void TestErrorMonadSuccess()
         {
             var result = (from val1 in DoSomething(10)
-                          from val2 in DoSomethingElse(val1)
-                          select val2)
-                         .Try();
+                from val2 in DoSomethingElse(val1)
+                select val2)
+                .Try();
 
             (result.IsFaulted == false).Should().BeTrue("Should have succeeded");
             result.Value.Should().Be(21, "Value should be 21");
@@ -108,10 +107,10 @@ namespace Slant.Monad.Specs
         public void TestErrorMonadFail()
         {
             var result = (from val1 in DoSomething(10)
-                          from val2 in DoSomethingError(val1)
-                          from val3 in DoNotEverEnterThisFunction(val2)
-                          select val3)
-                         .Try();
+                from val2 in DoSomethingError(val1)
+                from val3 in DoNotEverEnterThisFunction(val2)
+                select val3)
+                .Try();
 
             result.Value.Should().NotBe(10000, "Entered the function: DoNotEverEnterThisFunction()");
             result.IsFaulted.Should().BeTrue("Should throw an error");
@@ -130,9 +129,9 @@ namespace Slant.Monad.Specs
         public void TestErrorMonadFailFluent()
         {
             var result = DoSomething(10)
-                            .Then(ThrowError)
-                            .Then(_ => 10000)
-                            .Try();
+                .Then(ThrowError)
+                .Then(_ => 10000)
+                .Try();
 
             result.Value.Should().NotBe(10000, "Entered the function: DoNotEverEnterThisFunction()");
             result.IsFaulted.Should().BeTrue("Should throw an error");
@@ -156,14 +155,14 @@ namespace Slant.Monad.Specs
         [Test]
         public void TestErrorMatch1()
         {
-           (from one in One()
-            from err in Error()
-            from two in Two()
-            select one + two + err)
-           .Match(
-               Success: v => false.Should().BeTrue(),
-               Fail:    e => (e.Message == "Error!!").Should().BeTrue()
-            );
+            (from one in One()
+                from err in Error()
+                from two in Two()
+                select one + two + err)
+                .Match(
+                    Success: v => false.Should().BeTrue(),
+                    Fail: e => (e.Message == "Error!!").Should().BeTrue()
+                );
         }
 
         [Test]
@@ -171,13 +170,13 @@ namespace Slant.Monad.Specs
         {
             var unit =
                 (from one in One()
-                 from err in Error()
-                 from two in Two()
-                 select one + two + err)
-                .Match(
-                    val => false.Should().BeTrue(),
-                    err => (err.Message == "Error!!").Should().BeTrue()
-                );
+                    from err in Error()
+                    from two in Two()
+                    select one + two + err)
+                    .Match(
+                        val => false.Should().BeTrue(),
+                        err => (err.Message == "Error!!").Should().BeTrue()
+                    );
 
             Console.WriteLine(unit.ToString());
         }
@@ -186,12 +185,12 @@ namespace Slant.Monad.Specs
         public void TestErrorMatch3()
         {
             (from one in One()
-             from two in Two()
-             select one + two)
-            .Match(
-                Success: v => v.Should().Be(3),
-                Fail: e => false.Should().BeTrue()
-            );
+                from two in Two()
+                select one + two)
+                .Match(
+                    Success: v => v.Should().Be(3),
+                    Fail: e => false.Should().BeTrue()
+                );
         }
 
         [Test]
@@ -199,12 +198,12 @@ namespace Slant.Monad.Specs
         {
             var unit =
                 (from one in One()
-                 from two in Two()
-                 select one + two)
-                .Match(
-                    val => val.Should().Be(3),
-                    err => false.Should().BeTrue()
-                );
+                    from two in Two()
+                    select one + two)
+                    .Match(
+                        val => val.Should().Be(3),
+                        err => false.Should().BeTrue()
+                    );
 
             Console.WriteLine(unit.ToString());
         }

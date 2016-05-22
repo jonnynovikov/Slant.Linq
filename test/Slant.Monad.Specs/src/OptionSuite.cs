@@ -1,10 +1,13 @@
 ﻿#region [R# naming]
+
 // ReSharper disable ArrangeTypeModifiers
 // ReSharper disable UnusedMember.Local
 // ReSharper disable FieldCanBeMadeReadOnly.Local
 // ReSharper disable ArrangeTypeMemberModifiers
 // ReSharper disable InconsistentNaming
+
 #endregion
+
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -15,7 +18,7 @@ using FluentAssertions;
 using Monad;
 using Monad.Utility;
 
-namespace Slant.Monad.Specs
+namespace Monad.Specs
 {
     public class OptionSuite
     {
@@ -26,23 +29,23 @@ namespace Slant.Monad.Specs
             Option<int> option2 = () => 2000.ToOption();
 
             var result = from o in option
-                         select o;
+                select o;
 
             (result.HasValue() && result.Value() == 1000).Should().BeTrue();
             (result.Match(Just: () => true, Nothing: () => false)()).Should().BeTrue();
             (result.Match(Just: () => true, Nothing: false)()).Should().BeTrue();
 
             result = from o in option
-                     from o2 in option2
-                     select o2;
+                from o2 in option2
+                select o2;
 
             (result.HasValue() && result.Value() == 2000).Should().BeTrue();
             (result.Match(Just: () => true, Nothing: () => false)()).Should().BeTrue();
             (result.Match(Just: () => true, Nothing: false)()).Should().BeTrue();
 
             result = from o in option
-                     from o2 in Nothing()
-                     select o2;
+                from o2 in Nothing()
+                select o2;
 
             result.HasValue().Should().BeFalse();
         }

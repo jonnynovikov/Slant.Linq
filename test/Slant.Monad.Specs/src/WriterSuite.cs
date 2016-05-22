@@ -1,17 +1,20 @@
 #region [R# naming]
+
 // ReSharper disable ArrangeTypeModifiers
 // ReSharper disable UnusedMember.Local
 // ReSharper disable FieldCanBeMadeReadOnly.Local
 // ReSharper disable ArrangeTypeMemberModifiers
 // ReSharper disable InconsistentNaming
+
 #endregion
+
 using System;
 using System.Linq;
 using FluentAssertions;
 using Monad;
 using NSpectator;
 
-namespace Slant.Monad.Specs
+namespace Monad.Specs
 {
     public class WriterSuite
     {
@@ -24,8 +27,8 @@ namespace Slant.Monad.Specs
                 it["should memo multiplication result"] = () =>
                 {
                     var res = from a in LogNumber(3)
-                              from b in LogNumber(5)
-                              select a * b;
+                        from b in LogNumber(5)
+                        select a*b;
 
                     var memo = res.Memo();
 
@@ -40,9 +43,9 @@ namespace Slant.Monad.Specs
                 it["should memo multiplication result"] = () =>
                 {
                     var res = from a in LogNumber(3)
-                              from b in LogNumber(5)
-                              from _ in Writer.Tell("Gonna multiply these two")
-                              select a * b;
+                        from b in LogNumber(5)
+                        from _ in Writer.Tell("Gonna multiply these two")
+                        select a*b;
 
                     var memo = res.Memo();
 

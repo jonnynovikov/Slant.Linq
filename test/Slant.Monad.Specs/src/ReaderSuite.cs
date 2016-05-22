@@ -1,10 +1,13 @@
 ﻿#region [R# naming]
+
 // ReSharper disable ArrangeTypeModifiers
 // ReSharper disable UnusedMember.Local
 // ReSharper disable FieldCanBeMadeReadOnly.Local
 // ReSharper disable ArrangeTypeMemberModifiers
 // ReSharper disable InconsistentNaming
+
 #endregion
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,18 +17,18 @@ using FluentAssertions;
 using Monad;
 using NUnit.Framework;
 
-namespace Slant.Monad.Specs
+namespace Monad.Specs
 {
     public class ReaderSuite
     {
         [Test]
         public void ReaderBindTest1()
         {
-            var person = new Person { Name = "Joe", Surname = "Bloggs" };
+            var person = new Person {Name = "Joe", Surname = "Bloggs"};
 
             var reader = from n in Name()
-                         from s in Surname()
-                         select n + " " + s;
+                from s in Surname()
+                select n + " " + s;
 
             reader(person).Should().Be("Joe Bloggs");
         }
@@ -33,10 +36,10 @@ namespace Slant.Monad.Specs
         [Test]
         public void ReaderAskTest1()
         {
-            var person = new Person { Name = "Joe", Surname = "Bloggs" };
+            var person = new Person {Name = "Joe", Surname = "Bloggs"};
 
             var reader = from p in Reader.Ask<Person>()
-                         select p.Name  + " " + p.Surname;
+                select p.Name + " " + p.Surname;
 
             reader(person).Should().Be("Joe Bloggs");
         }
@@ -44,12 +47,12 @@ namespace Slant.Monad.Specs
         [Test]
         public void ReaderAskTest2()
         {
-            var person = new Person { Name = "Joe", Surname = "Bloggs" };
+            var person = new Person {Name = "Joe", Surname = "Bloggs"};
 
             var reader = from p in Reader.Ask<Person>()
-                         let nl = p.Name.Length
-                         let sl = p.Surname.Length
-                         select nl * sl;
+                let nl = p.Name.Length
+                let sl = p.Surname.Length
+                select nl*sl;
 
             reader(person).Should().Be(18);
         }
@@ -57,15 +60,15 @@ namespace Slant.Monad.Specs
         [Test]
         public void ReaderAskReturnAndBindTest()
         {
-            var person = new Person { Name = "Joe", Surname = "Bloggs" };
+            var person = new Person {Name = "Joe", Surname = "Bloggs"};
 
-            var env = Reader.Return<Person,int>(10);
+            var env = Reader.Return<Person, int>(10);
 
             var reader = from x in env
-                         from p in Reader.Ask<Person>()
-                         let nl = p.Name.Length
-                         let sl = p.Surname.Length
-                         select nl * sl * x;
+                from p in Reader.Ask<Person>()
+                let nl = p.Name.Length
+                let sl = p.Surname.Length
+                select nl*sl*x;
 
             reader(person).Should().Be(180);
         }
@@ -73,15 +76,15 @@ namespace Slant.Monad.Specs
         [Test]
         public void ReaderAskReturnAndBindTest2()
         {
-            var person = new Person { Name = "Joe", Surname = "Bloggs" };
+            var person = new Person {Name = "Joe", Surname = "Bloggs"};
 
-            var env = Reader.Return<Person,int>(10);
+            var env = Reader.Return<Person, int>(10);
 
             var reader = from x in env
-                         from p in env.Ask()
-                         let nl = p.Name.Length
-                         let sl = p.Surname.Length
-                         select nl * sl * x;
+                from p in env.Ask()
+                let nl = p.Name.Length
+                let sl = p.Surname.Length
+                select nl*sl*x;
 
             reader(person).Should().Be(180);
         }
@@ -103,6 +106,5 @@ namespace Slant.Monad.Specs
         {
             return env => env.Surname;
         }
-
     }
 }

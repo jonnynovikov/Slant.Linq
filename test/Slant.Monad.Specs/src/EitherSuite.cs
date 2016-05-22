@@ -1,16 +1,19 @@
 #region [R# naming]
+
 // ReSharper disable ArrangeTypeModifiers
 // ReSharper disable UnusedMember.Local
 // ReSharper disable FieldCanBeMadeReadOnly.Local
 // ReSharper disable ArrangeTypeMemberModifiers
 // ReSharper disable InconsistentNaming
+
 #endregion
+
 using System;
 using FluentAssertions;
 using Monad;
 using NUnit.Framework;
 
-namespace Slant.Monad.Specs
+namespace Monad.Specs
 {
     public class EitherSuite
     {
@@ -18,8 +21,8 @@ namespace Slant.Monad.Specs
         public void TestEitherBinding1()
         {
             var r = from lhs in Two()
-                    from rhs in Two()
-                    select lhs+rhs;
+                from rhs in Two()
+                select lhs + rhs;
 
             (r.IsRight() && r.Right() == 4).Should().BeTrue();
         }
@@ -28,9 +31,9 @@ namespace Slant.Monad.Specs
         public void TestEitherBinding2()
         {
             var r = (from lhs in Two()
-                     from rhs in Error()
-                     select lhs + rhs)
-                    .Memo();
+                from rhs in Error()
+                select lhs + rhs)
+                .Memo();
 
             (r().IsLeft && r().Left == "Error!!").Should().BeTrue();
         }
@@ -39,17 +42,17 @@ namespace Slant.Monad.Specs
         [Test]
         public void TestEitherBinding3()
         {
-            var r = 
+            var r =
                 from lhs in Two()
                 select lhs;
 
             (r.IsRight() && r.Right() == 2).Should().BeTrue();
-        }    
+        }
 
         [Test]
         public void TestEitherBinding4()
         {
-            var r = 
+            var r =
                 from lhs in Error()
                 select lhs;
 
@@ -73,13 +76,13 @@ namespace Slant.Monad.Specs
         {
             var unit =
                 (from one in Two()
-                 from two in Error()
-                 from thr in Two()
-                 select one + two + thr)
-                .Match(
-                    Right: r => false.Should().BeTrue(),
-                    Left: l => (l == "Error!!").Should().BeTrue()
-                );
+                    from two in Error()
+                    from thr in Two()
+                    select one + two + thr)
+                    .Match(
+                        Right: r => false.Should().BeTrue(),
+                        Left: l => (l == "Error!!").Should().BeTrue()
+                    );
 
             Console.WriteLine(unit.ToString());
         }
@@ -89,13 +92,13 @@ namespace Slant.Monad.Specs
         {
             var unit =
                 (from one in Two()
-                 from two in Error()
-                 from thr in Two()
-                 select one + two + thr)
-                .Match(
-                    right => true.Should().BeFalse(),
-                    left => (left == "Error!!").Should().BeTrue()
-                );
+                    from two in Error()
+                    from thr in Two()
+                    select one + two + thr)
+                    .Match(
+                        right => true.Should().BeFalse(),
+                        left => (left == "Error!!").Should().BeTrue()
+                    );
             Console.WriteLine(unit.ToString());
         }
 
@@ -104,12 +107,12 @@ namespace Slant.Monad.Specs
         {
             var unit =
                 (from one in Two()
-                 from two in Two()
-                 select one + two)
-                .Match(
-                    Right: r => (r == 4).Should().BeTrue(),
-                    Left: l => true.Should().BeFalse()
-                );
+                    from two in Two()
+                    select one + two)
+                    .Match(
+                        Right: r => (r == 4).Should().BeTrue(),
+                        Left: l => true.Should().BeFalse()
+                    );
             Console.WriteLine(unit.ToString());
         }
 
@@ -118,12 +121,12 @@ namespace Slant.Monad.Specs
         {
             var unit =
                 (from one in Two()
-                 from two in Two()
-                 select one + two)
-                .Match(
-                    right => (right == 4).Should().BeTrue(),
-                    left => true.Should().BeFalse()
-                );
+                    from two in Two()
+                    select one + two)
+                    .Match(
+                        right => (right == 4).Should().BeTrue(),
+                        left => true.Should().BeFalse()
+                    );
             Console.WriteLine(unit.ToString());
         }
 
@@ -132,12 +135,12 @@ namespace Slant.Monad.Specs
         {
             var result =
                 (from one in Two()
-                 from two in Two()
-                 select one + two)
-                .Match(
-                    Right: r => r * 2,
-                    Left: l => 0
-                );
+                    from two in Two()
+                    select one + two)
+                    .Match(
+                        Right: r => r*2,
+                        Left: l => 0
+                    );
 
             result().Should().Be(8);
         }
@@ -147,13 +150,13 @@ namespace Slant.Monad.Specs
         {
             var result =
                 (from one in Two()
-                 from err in Error()
-                 from two in Two()
-                 select one + two)
-                .Match(
-                    Right: r => r * 2,
-                    Left: l => 0
-                );
+                    from err in Error()
+                    from two in Two()
+                    select one + two)
+                    .Match(
+                        Right: r => r*2,
+                        Left: l => 0
+                    );
             result().Should().Be(0);
         }
 
@@ -168,4 +171,3 @@ namespace Slant.Monad.Specs
         }
     }
 }
-

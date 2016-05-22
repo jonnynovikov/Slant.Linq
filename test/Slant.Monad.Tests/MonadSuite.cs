@@ -2,7 +2,7 @@
 using System.Reflection;
 using NUnit.Framework;
 
-namespace Slant.Monad.Tests
+namespace Monad.Tests
 {
     public class MonadSuite : DebuggerShim
     {

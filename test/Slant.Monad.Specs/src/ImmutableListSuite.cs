@@ -1,10 +1,13 @@
 ﻿#region [R# naming]
+
 // ReSharper disable ArrangeTypeModifiers
 // ReSharper disable UnusedMember.Local
 // ReSharper disable FieldCanBeMadeReadOnly.Local
 // ReSharper disable ArrangeTypeMemberModifiers
 // ReSharper disable InconsistentNaming
+
 #endregion
+
 using Monad.Parsec;
 using NUnit.Framework;
 using System;
@@ -17,14 +20,14 @@ using Monad;
 using Monad.Utility;
 
 
-namespace Slant.Monad.Specs
+namespace Monad.Specs
 {
     public class ImmutableListSuite
     {
         [Test]
         public void EnumeratorTest1()
         {
-            var list1 = new ImmutableList<int>(new int[] { 0, 1, 2 });
+            var list1 = new ImmutableList<int>(new int[] {0, 1, 2});
 
             int index = 0;
             foreach (var item in list1)
@@ -38,8 +41,8 @@ namespace Slant.Monad.Specs
         [Test]
         public void EnumeratorTest2()
         {
-            var list1 = new ImmutableList<int>(new int[] { 0, 1, 2 });
-            var list2 = new ImmutableList<int>(new int[] { 3, 4, 5 });
+            var list1 = new ImmutableList<int>(new int[] {0, 1, 2});
+            var list2 = new ImmutableList<int>(new int[] {3, 4, 5});
 
             var list = list1.Concat(list2);
 
@@ -56,10 +59,10 @@ namespace Slant.Monad.Specs
         [Test]
         public void EnumeratorTest3()
         {
-            var list1 = new ImmutableList<int>(new int[] { 1, 2, 3 });
-            var list2 = new ImmutableList<int>(new int[] { 4, 5, 6 });
+            var list1 = new ImmutableList<int>(new int[] {1, 2, 3});
+            var list2 = new ImmutableList<int>(new int[] {4, 5, 6});
 
-            var list = 0.Cons( list1.Concat(list2) );
+            var list = 0.Cons(list1.Concat(list2));
 
             int index = 0;
             foreach (var item in list)
@@ -74,8 +77,8 @@ namespace Slant.Monad.Specs
         [Test]
         public void EnumeratorLengthTest1()
         {
-            var list1 = new ImmutableList<int>(new int[] { 0, 1, 2 });
-            var list2 = new ImmutableList<int>(new int[] { 3, 4, 5 });
+            var list1 = new ImmutableList<int>(new int[] {0, 1, 2});
+            var list2 = new ImmutableList<int>(new int[] {3, 4, 5});
 
             var list = list1.Concat(list2);
 

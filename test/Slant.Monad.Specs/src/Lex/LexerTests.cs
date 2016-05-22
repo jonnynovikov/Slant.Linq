@@ -1,10 +1,13 @@
 ﻿#region [R# naming]
+
 // ReSharper disable ArrangeTypeModifiers
 // ReSharper disable UnusedMember.Local
 // ReSharper disable FieldCanBeMadeReadOnly.Local
 // ReSharper disable ArrangeTypeMemberModifiers
 // ReSharper disable InconsistentNaming
+
 #endregion
+
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -20,7 +23,7 @@ using System.Diagnostics;
 using FluentAssertions;
 using Monad;
 
-namespace Slant.Monad.Specs.Lex
+namespace Monad.Specs.Lex
 {
     public class LexerTests
     {
@@ -28,12 +31,12 @@ namespace Slant.Monad.Specs.Lex
             @"def foo(x y) 1=2;";
 
         private static string TestData2 =
-          @"def foo(x y) x+foo(y, 4);
+            @"def foo(x y) x+foo(y, 4);
             def foo(x y) x+y*2;
             def foo(x y) x+y;
             extern sin(a);";
 
-        private static string TestData3=
+        private static string TestData3 =
             @"1+1";
 
         /// <summary>
@@ -45,8 +48,8 @@ namespace Slant.Monad.Specs.Lex
             Parser<Term> exprlazy = null;
             Parser<Term> expr = Prim.Lazy<Term>(() => exprlazy);
             Func<Parser<Term>, Parser<Term>> contents;
-            Func<Parser<Term>,Parser<ImmutableList<Term>>> many = Prim.Many;
-            Func<Parser<Term>,Parser<Term>> @try = Prim.Try;
+            Func<Parser<Term>, Parser<ImmutableList<Term>>> many = Prim.Many;
+            Func<Parser<Term>, Parser<Term>> @try = Prim.Try;
 
             var def = new Lang();
             var lexer = Tok.MakeTokenParser<Term>(def);
@@ -65,47 +68,47 @@ namespace Slant.Monad.Specs.Lex
 
             // Parser
             var integer = from n in intlex
-                          select new Integer(n) as Term;
+                select new Integer(n) as Term;
 
             var variable = from v in identifier
-                           select new Var(v) as Term;
+                select new Var(v) as Term;
 
             var manyargs = parens(from ts in many(variable)
-                                  select new Arguments(ts) as Term);
+                select new Arguments(ts) as Term);
 
             var commaSepExpr = parens(from cs in commaSep(expr)
-                                      select new Exprs(cs) as Term);
+                select new Exprs(cs) as Term);
 
             var function = from _ in reserved("def")
-                           from name in identifier
-                           from args in manyargs
-                           from body in expr
-                           select new Function(name, args, body) as Term;
+                from name in identifier
+                from args in manyargs
+                from body in expr
+                select new Function(name, args, body) as Term;
 
             var externFn = from _ in reserved("extern")
-                           from name in identifier
-                           from args in manyargs
-                           select new Extern(name, args) as Term;
+                from name in identifier
+                from args in manyargs
+                select new Extern(name, args) as Term;
 
             var call = from name in identifier
-                       from args in commaSepExpr
-                       select new Call(name, args as Exprs) as Term;
+                from args in commaSepExpr
+                select new Call(name, args as Exprs) as Term;
 
             var subexpr = (from p in parens(expr)
-                           select new Expression(p) as Term);
+                select new Expression(p) as Term);
 
             var factor = from f in @try(integer)
-                         | @try(externFn)
-                         | @try(function)
-                         | @try(call)
-                         | @try(variable)
-                         | subexpr
-                         select f;
+                                   | @try(externFn)
+                                   | @try(function)
+                                   | @try(call)
+                                   | @try(variable)
+                                   | subexpr
+                select f;
 
             var defn = from f in @try(externFn)
-                       | @try(function)
-                       | @try(expr)
-                       select f;
+                                 | @try(function)
+                                 | @try(expr)
+                select f;
 
             contents = p =>
                 from ws in whiteSpace
@@ -113,11 +116,11 @@ namespace Slant.Monad.Specs.Lex
                 select r;
 
             var toplevel = from ts in many(
-                               from fn in defn
-                               from semi in reservedOp(";")
-                               select fn
-                           )
-                           select ts;
+                from fn in defn
+                from semi in reservedOp(";")
+                select fn
+                )
+                select ts;
 
             exprlazy = Ex.BuildExpressionParser<Term>(binops, factor);
 
@@ -148,8 +151,8 @@ namespace Slant.Monad.Specs.Lex
         {
             public Lang()
             {
-                ReservedOpNames = new string[] { "+", "*", "-", ";", "/", "<", "=" };
-                ReservedNames = new string[] { "def", "extern" };
+                ReservedOpNames = new string[] {"+", "*", "-", ";", "/", "<", "="};
+                ReservedNames = new string[] {"def", "extern"};
                 CommentLine = "#";
             }
         }
@@ -157,24 +160,24 @@ namespace Slant.Monad.Specs.Lex
         private static OperatorTable<T> BuildOperatorsTable<T>(TokenParser<T> lexer)
             where T : Token
         {
-            Func<T, T, ReservedOpToken, T> fn = (lhs, rhs, op) => new BinaryOp(lhs,rhs,op) as T;
+            Func<T, T, ReservedOpToken, T> fn = (lhs, rhs, op) => new BinaryOp(lhs, rhs, op) as T;
 
-            Func<ReservedOpToken,Func<T,T,T>> binop = op => ((T lhs, T rhs) => fn(lhs, rhs, op));
+            Func<ReservedOpToken, Func<T, T, T>> binop = op => ((T lhs, T rhs) => fn(lhs, rhs, op));
 
             Func<string, Parser<Func<T, T, T>>> resOp = name => from op in lexer.ReservedOp(name) select binop(op);
 
-            var equals =    new Infix<T>("=", resOp("="), Assoc.Left);
-            var mult =      new Infix<T>("*", resOp("*"), Assoc.Left);
-            var divide =    new Infix<T>("/", resOp("/"), Assoc.Left);
-            var plus =      new Infix<T>("+", resOp("+"), Assoc.Left);
-            var minus =     new Infix<T>("-", resOp("-"), Assoc.Left);
-            var lessThan =  new Infix<T>("<", resOp("<"), Assoc.Left);
+            var equals = new Infix<T>("=", resOp("="), Assoc.Left);
+            var mult = new Infix<T>("*", resOp("*"), Assoc.Left);
+            var divide = new Infix<T>("/", resOp("/"), Assoc.Left);
+            var plus = new Infix<T>("+", resOp("+"), Assoc.Left);
+            var minus = new Infix<T>("-", resOp("-"), Assoc.Left);
+            var lessThan = new Infix<T>("<", resOp("<"), Assoc.Left);
 
             var binops = new OperatorTable<T>();
             binops.AddRow().Add(equals)
-                  .AddRow().Add(mult).Add(divide)
-                  .AddRow().Add(plus).Add(minus)
-                  .AddRow().Add(lessThan);
+                .AddRow().Add(mult).Add(divide)
+                .AddRow().Add(plus).Add(minus)
+                .AddRow().Add(lessThan);
 
             return binops;
         }
@@ -187,7 +190,7 @@ namespace Slant.Monad.Specs.Lex
 
             public BinaryOp(Token lhs, Token rhs, Token op, SrcLoc loc = null)
                 :
-                base(loc)
+                    base(loc)
             {
                 Lhs = lhs;
                 Rhs = rhs;
@@ -199,7 +202,7 @@ namespace Slant.Monad.Specs.Lex
         {
             public Term(SrcLoc location)
                 :
-                base(location)
+                    base(location)
             {
             }
         }
@@ -207,9 +210,10 @@ namespace Slant.Monad.Specs.Lex
         public class Integer : Term
         {
             public IntegerToken Value;
+
             public Integer(IntegerToken t, SrcLoc location = null)
                 :
-                base(location)
+                    base(location)
             {
                 Value = t;
             }
@@ -218,9 +222,10 @@ namespace Slant.Monad.Specs.Lex
         public class Var : Term
         {
             public IdentifierToken Id;
+
             public Var(IdentifierToken id, SrcLoc location = null)
                 :
-                base(location)
+                    base(location)
             {
                 Id = id;
             }
@@ -234,7 +239,7 @@ namespace Slant.Monad.Specs.Lex
 
             public Function(IdentifierToken id, Term args, Token body, SrcLoc location = null)
                 :
-                base(location)
+                    base(location)
             {
                 Id = id;
                 Args = args as Arguments;
@@ -249,7 +254,7 @@ namespace Slant.Monad.Specs.Lex
 
             public Extern(IdentifierToken id, Term args, SrcLoc location = null)
                 :
-                base(location)
+                    base(location)
             {
                 Id = id;
                 Args = args as Arguments;
@@ -263,7 +268,7 @@ namespace Slant.Monad.Specs.Lex
 
             public Call(IdentifierToken name, Exprs args, SrcLoc location = null)
                 :
-                base(location)
+                    base(location)
             {
                 Name = name;
                 Args = args;
@@ -273,9 +278,10 @@ namespace Slant.Monad.Specs.Lex
         public class Expression : Term
         {
             public Token Expr;
+
             public Expression(Token expr, SrcLoc location = null)
                 :
-                base(location)
+                    base(location)
             {
                 Expr = expr;
             }
@@ -284,9 +290,10 @@ namespace Slant.Monad.Specs.Lex
         public class Arguments : Term
         {
             public IEnumerable<Token> Args;
+
             public Arguments(IEnumerable<Token> args, SrcLoc location = null)
                 :
-                base(location)
+                    base(location)
             {
                 Args = args;
             }
@@ -295,16 +302,17 @@ namespace Slant.Monad.Specs.Lex
         public class Exprs : Term
         {
             public IEnumerable<Token> List;
+
             public Exprs(IEnumerable<Token> exprs, SrcLoc location = null)
                 :
-                base(location)
+                    base(location)
             {
                 List = exprs;
             }
         }
 
         private static string TestData4 =
-          @"def foo(x y) x+foo(y, 4);
+            @"def foo(x y) x+foo(y, 4);
             def foo(x y) x+y*2;
             def foo(x y) x+y;
             extern sin(a);
@@ -1067,6 +1075,5 @@ namespace Slant.Monad.Specs.Lex
             extern sin(a);def foo(x y) x+foo(y, 4);
             def foo(x y) x+y*2;
             def foo(x y) x+y;";
-
     }
 }

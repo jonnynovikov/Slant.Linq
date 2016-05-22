@@ -1,17 +1,20 @@
 #region [R# naming]
+
 // ReSharper disable ArrangeTypeModifiers
 // ReSharper disable UnusedMember.Local
 // ReSharper disable FieldCanBeMadeReadOnly.Local
 // ReSharper disable ArrangeTypeMemberModifiers
 // ReSharper disable InconsistentNaming
+
 #endregion
+
 using FluentAssertions;
 using Monad;
 using Monad.Parsec;
 using Monad.Parsec.Language;
 using NUnit.Framework;
 
-namespace Slant.Monad.Specs.Lex
+namespace Monad.Specs.Lex
 {
     public class TokTests
     {
@@ -19,7 +22,7 @@ namespace Slant.Monad.Specs.Lex
         public void LexemeTest()
         {
             var lex = from l in Tok.Lexeme<ParserChar>(Prim.Character('A'))
-                               select l;
+                select l;
 
             var res = lex.Parse("A");
             res.IsFaulted.Should().BeFalse();
@@ -32,7 +35,7 @@ namespace Slant.Monad.Specs.Lex
         public void SymbolTest()
         {
             var sym = from s in Tok.Symbol("***")
-                               select s;
+                select s;
 
             var res = sym.Parse("***   ");
 
@@ -43,7 +46,7 @@ namespace Slant.Monad.Specs.Lex
         public void OneLineComment()
         {
             var p = from v in Tok.OneLineComment(new HaskellDef())
-                    select v;
+                select v;
 
             var res = p.Parse("-- This whole line is a comment");
 
@@ -55,7 +58,7 @@ namespace Slant.Monad.Specs.Lex
         public void MultiLineComment()
         {
             var p = from v in Tok.MultiLineComment(new HaskellDef())
-                    select v;
+                select v;
 
             var res = p.Parse(
                 @"{- This whole {- line is a comment
@@ -64,14 +67,14 @@ namespace Slant.Monad.Specs.Lex
 
             var left = res.Value.Head().Item2.AsString();
 
-            (!res.IsFaulted &&  left == "  let x=1").Should().BeTrue();
+            (!res.IsFaulted && left == "  let x=1").Should().BeTrue();
         }
 
         [Test]
         public void WhiteSpaceTest()
         {
             var p = from v in Tok.WhiteSpace(new HaskellDef())
-                    select v;
+                select v;
 
             var res = p.Parse(
                 @"                              {- This whole {- line is a comment
@@ -87,7 +90,7 @@ namespace Slant.Monad.Specs.Lex
         public void CharLiteralTest()
         {
             var p = from v in Tok.Chars.CharLiteral()
-                    select v;
+                select v;
 
             var res = p.Parse("'a'  abc");
             var left = res.Value.Head().Item2.AsString();
@@ -103,7 +106,7 @@ namespace Slant.Monad.Specs.Lex
         public void StringLiteralTest()
         {
             var p = from v in Tok.Strings.StringLiteral()
-                    select v;
+                select v;
 
             var res = p.Parse("\"abc\"  def");
             var left = res.Value.Head().Item2.AsString();
@@ -120,7 +123,7 @@ namespace Slant.Monad.Specs.Lex
         public void NumbersIntegerTest()
         {
             var p = from v in Tok.Numbers.Integer()
-                    select v;
+                select v;
 
             var res = p.Parse("1234  def");
             var left = res.Value.Head().Item2.AsString();
@@ -133,7 +136,7 @@ namespace Slant.Monad.Specs.Lex
         public void NumbersHexTest()
         {
             var p = from v in Tok.Numbers.Hexadecimal()
-                    select v;
+                select v;
 
             var res = p.Parse("xAB34");
             var left = res.Value.Head().Item2.AsString();
@@ -146,7 +149,7 @@ namespace Slant.Monad.Specs.Lex
         public void NumbersOctalTest()
         {
             var p = from v in Tok.Numbers.Octal()
-                    select v;
+                select v;
 
             var res = p.Parse("o777");
             var left = res.Value.Head().Item2.AsString();
@@ -217,10 +220,9 @@ namespace Slant.Monad.Specs.Lex
         public void TestReservedOperator()
         {
             var def = new HaskellDef();
-            var r = Tok.Ops.ReservedOp("=>",def).Parse("=>  ");
+            var r = Tok.Ops.ReservedOp("=>", def).Parse("=>  ");
             (!r.IsFaulted).Should().BeTrue();
             (r.Value.Head().Item1.Value.AsString() == "=>").Should().BeTrue();
         }
     }
 }
-

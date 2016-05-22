@@ -1,10 +1,13 @@
 ﻿#region [R# naming]
+
 // ReSharper disable ArrangeTypeModifiers
 // ReSharper disable UnusedMember.Local
 // ReSharper disable FieldCanBeMadeReadOnly.Local
 // ReSharper disable ArrangeTypeMemberModifiers
 // ReSharper disable InconsistentNaming
+
 #endregion
+
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -13,7 +16,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
 
-namespace Slant.Monad.Specs
+namespace Monad.Specs
 {
     public class MemoizationSuite
     {
@@ -23,10 +26,10 @@ namespace Slant.Monad.Specs
         public void MemoizationTest1()
         {
             var mon = (from one in One()
-                       from two in Two()
-                       from thr in Three()
-                       select one + two + thr)
-                      .Memo();
+                from two in Two()
+                from thr in Three()
+                select one + two + thr)
+                .Memo();
 
             var res = mon();
             res.Should().Be(6);
@@ -63,15 +66,15 @@ namespace Slant.Monad.Specs
                 var resT = self();
 
                 var resU = map(resT);
-                
+
                 return resU;
             };
         }
 
-        public static Monad<V> SelectMany<T,U,V>(
-            this Monad<T> self, 
-            Func<T,Monad<U>> select,
-            Func<T,U,V> project
+        public static Monad<V> SelectMany<T, U, V>(
+            this Monad<T> self,
+            Func<T, Monad<U>> select,
+            Func<T, U, V> project
             )
         {
             return () =>
@@ -85,7 +88,7 @@ namespace Slant.Monad.Specs
         }
 
         /// <summary>
-        /// Memoize the result 
+        /// Memorize the result 
         /// </summary>
         public static Func<T> Memo<T>(this Monad<T> self)
         {
