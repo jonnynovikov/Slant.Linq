@@ -9,19 +9,35 @@
 #endregion
 
 using System;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Monad;
 using NUnit.Framework;
 
 namespace Monad.Specs
 {
+    public static class TryAsyncExt
+    {
+        public static async Task<TryResult<T>> TryAsync<T>(this Task<T> t)
+        {
+            try
+            {
+                return await t;
+            }
+            catch (Exception e)
+            {
+                return new TryResult<T>(e);
+            }
+        }
+    }
+
     public class TrySuite
     {
         [Test]
         public void TestTry()
         {
             var r = from lhs in Error()
-                from rhs in Two()
+                from rhs in Two().Select(_ => 999.0)
                 select lhs + rhs;
 
             (r().IsFaulted && r().Exception.Message == "Error!!").Should().BeTrue();

@@ -225,11 +225,7 @@ namespace Slant.Linq
                     list.Add(p);
                 }
             }
-            if (list != null)
-            {
-                return list.AsReadOnly();
-            }
-            return original;
+            return list?.AsReadOnly() ?? original;
         }
 
         /// <summary> 
