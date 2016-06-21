@@ -133,7 +133,6 @@ namespace Slant.Linq.Tests
                 criteria.Expand().ToString().Should().Be("x => x.Item1.Item2");
             }
 
-
             void Specify_expand_processes_arguments()
             {
                 Expression<Func<Tuple<bool, bool>, bool>> expr1 = x => x.Item1 && x.Item2;

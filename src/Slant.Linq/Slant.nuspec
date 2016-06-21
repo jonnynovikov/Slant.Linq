@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
 <metadata>
-        <id>Slant.Linq</id>
+        <id>Slant</id>
         <version>1.0.0</version>
-        <title>Slant.Linq</title>
+        <title>Slant</title>
         <authors>Slant Development Team</authors>
         <owners>Jonny Novikov</owners>
-        <licenseUrl>https://raw.githubusercontent.com/slantdotnet/Slant.Linq/master/license.txt</licenseUrl>
+        <licenseUrl>https://raw.githubusercontent.com/slantdotnet/Slant/master/license.txt</licenseUrl>
         <projectUrl>https://github.com/slantdotnet/Slant.Linq</projectUrl>
         <iconUrl>https://raw.githubusercontent.com/slantdotnet/Slant.Linq/master/src/logo.png</iconUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -19,8 +19,8 @@
     </metadata>
   <files>
     <file src="license.txt" />
-    <file src="bin\Release\Slant.Linq.dll" target="lib\Slant.Linq.dll" />
-    <file src="bin\Release\Slant.Linq.pdb" target="lib\Slant.Linq.pdb" />
-    <file src="bin\Release\Slant.Linq.XML" target="lib\Slant.Linq.XML" />
+    <file src="bin\Release\Slant.dll" target="lib\Slant.dll" />
+    <file src="bin\Release\Slant.pdb" target="lib\Slant.pdb" />
+    <file src="bin\Release\Slant.XML" target="lib\Slant.XML" />
   </files>
 </package>
