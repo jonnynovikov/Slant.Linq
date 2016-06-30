@@ -1,10 +1,10 @@
 Slant LINQ
 ==============
 
-[![Join the chat at https://gitter.im/slantdotnet/Slant.Entity](https://badges.gitter.im/slantdotnet/Slant.Entity.svg)](https://gitter.im/slantdotnet/Slant.Entity?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://gitter.im/slantstack/Slant.Entity](https://badges.gitter.im/slantstack/Slant.Entity.svg)](https://gitter.im/slantstack/Slant.Entity?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![NuGet version (Slant.Entity)](https://img.shields.io/nuget/v/Slant.Linq.svg?style=flat)](https://www.nuget.org/packages/Slant.Linq/)
-[![Build Status](https://travis-ci.org/slantdotnet/Slant.Entity.svg?branch=master)](https://travis-ci.org/slantdotnet/Slant.Linq)
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/slantdotnet/Slant.Linq/master/license.txt)
+[![Build Status](https://travis-ci.org/slantstack/Slant.Entity.svg?branch=master)](https://travis-ci.org/slantstack/Slant.Linq)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/slantstack/Slant.Linq/master/license.txt)
 
 ## Overview
 
@@ -39,13 +39,13 @@ PM> Install-Package Slant.Linq
 
 Check out our wiki to see typical and non-trivial usages and detailed examples:
 
-[Using LINQ Extensions](https://github.com/slantdotnet/Slant.Entity/wiki/Using-LINQ-Extensions)
+[Using LINQ Extensions](https://github.com/slantstack/Slant.Entity/wiki/Using-LINQ-Extensions)
 
-[Using DbContextScope](https://github.com/slantdotnet/Slant.Entity/wiki/Using-DbContextScope)
+[Using DbContextScope](https://github.com/slantstack/Slant.Entity/wiki/Using-DbContextScope)
 
 ## Contributing
 
-Check out [this wiki page](https://github.com/slantdotnet/Slant.Entity/wiki/Contributing) for complete guide.
+Check out [this wiki page](https://github.com/slantstack/Slant.Entity/wiki/Contributing) for complete guide.
 
 ## Thanks to
 
